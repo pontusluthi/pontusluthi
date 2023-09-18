@@ -6,7 +6,10 @@ import styles from "../styles/Home.module.css";
 
 const FORCE_MULT = 0.003;
 const RADIUS = 350;
-const MOUSE_DISTANCE = 150;
+const MOUSE_DISTANCE = 100;
+const MAX_MOUSE_DISTANCE = Math.floor(
+  Math.sqrt(MOUSE_DISTANCE ** 2 + MOUSE_DISTANCE ** 2)
+);
 const MOUSE_FORCE = 0.00006;
 
 class Home extends Component {
@@ -33,6 +36,7 @@ class Home extends Component {
         width: window.innerWidth,
         height: window.innerHeight,
         showVelocity: false,
+        wireframes: false,
       },
     });
 
@@ -85,15 +89,21 @@ class Home extends Component {
       for (let i = 0; i < Composite.allBodies(engine.world).length; i++) {
         let body = Composite.allBodies(engine.world)[i];
 
+        body.render.fillStyle = "rgb(100, 100, 100";
+
         Body.applyForce(
           body,
           { x: body.position.x, y: body.position.y },
           vectorField(body.position)
         );
-        if (
-          Math.abs(body.position.x - mouse.position.x) < MOUSE_DISTANCE &&
-          Math.abs(body.position.y - mouse.position.y) < MOUSE_DISTANCE
-        ) {
+        let mDiff = Math.floor(
+          Math.sqrt(
+            (body.position.x - mouse.position.x) ** 2 +
+              (body.position.y - mouse.position.y) ** 2
+          )
+        );
+
+        if (mDiff < MAX_MOUSE_DISTANCE) {
           Body.applyForce(
             body,
             { x: mouse.position.x, y: mouse.position.y },
@@ -101,6 +111,14 @@ class Home extends Component {
               x: (body.position.x - mouse.position.x) * MOUSE_FORCE,
               y: (body.position.y - mouse.position.y) * MOUSE_FORCE,
             }
+          );
+          body.render.fillStyle = "rgb(".concat(
+            100 + MAX_MOUSE_DISTANCE - mDiff,
+            ", ",
+            100 + 1.8 * (MAX_MOUSE_DISTANCE - mDiff),
+            ", ",
+            100 + 2 * (MAX_MOUSE_DISTANCE - mDiff),
+            ")"
           );
         }
       }
