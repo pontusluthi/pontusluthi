@@ -6,11 +6,12 @@ import styles from "../styles/Home.module.css";
 
 const FORCE_MULT = 0.003;
 const RADIUS = 350;
-const MOUSE_DISTANCE = 100;
+const MOUSE_DISTANCE = 130;
 const MAX_MOUSE_DISTANCE = Math.floor(
   Math.sqrt(MOUSE_DISTANCE ** 2 + MOUSE_DISTANCE ** 2)
 );
-const MOUSE_FORCE = 0.00006;
+const MOUSE_FORCE = 0.00004;
+const LUMP_FORCE = 0.005;
 
 class Home extends Component {
   componentDidMount() {
@@ -37,10 +38,11 @@ class Home extends Component {
         height: window.innerHeight,
         showVelocity: false,
         wireframes: false,
+        background: "rgb(40, 70, 80)",
       },
     });
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 55; i++) {
       Composite.add(
         world,
         Bodies.circle(
@@ -94,7 +96,7 @@ class Home extends Component {
         Body.applyForce(
           body,
           { x: body.position.x, y: body.position.y },
-          vectorField(body.position)
+          vectorFieldCircle(body.position)
         );
         let mDiff = Math.floor(
           Math.sqrt(
@@ -151,12 +153,22 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-function vectorField({ x, y }) {
+function vectorFieldCircle({ x, y }) {
   x = (x - window.innerWidth / 2) / RADIUS;
   y = (y - window.innerHeight / 2) / RADIUS;
   return {
     x: (x - y - x * (x ** 2 + y ** 2)) * FORCE_MULT,
     y: (x + y - y * (x ** 2 + y ** 2)) * FORCE_MULT,
+  };
+}
+
+function vectorFieldLump({ x, y }) {
+  x = x - window.innerWidth / 2;
+  y = y - window.innerHeight / 2;
+
+  return {
+    x: -x * FORCE_MULT * LUMP_FORCE,
+    y: -y * FORCE_MULT * LUMP_FORCE,
   };
 }
 
