@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import styles from "../styles/Home.module.css";
 import '../components/balls'
 import Balls from "../components/balls";
@@ -7,13 +7,14 @@ import Balls from "../components/balls";
 export default function Home() {
     const [field, setField] = useState("circle");
 
+
     return (
         <div className={styles.body}>
             <Head>
                 <title>Pontus Lüthi</title>
             </Head>
 
-            <Balls key={field} field={field} />
+            <Balls key={field} field={field}/>
 
             <div className={styles.name}>
                 <h1>Pontus Lüthi</h1>

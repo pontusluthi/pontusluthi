@@ -2,21 +2,25 @@ import React, {Component, useState} from "react";
 import * as Matter from "matter-js";
 
 
-const FORCE_MULTI = 0.003;
-const RADIUS = 350;
+let RADIUS = 350;
+const FORCE_MULTI = 0.0013;
+
 const MOUSE_DISTANCE = 130;
 const MAX_MOUSE_DISTANCE = Math.floor(
     Math.sqrt(MOUSE_DISTANCE ** 2 + MOUSE_DISTANCE ** 2)
 );
-const MOUSE_FORCE = 0.00004;
-const LUMP_FORCE = 0.005;
+const MOUSE_FORCE = 0.000025;
+const LUMP_FORCE = 0.005 * 0.0013;
+
+const BASE_COLOR = "rgb(56, 134, 151)";
+const BASE_RGB = {r: 56, g: 134, b: 151};
 
 const circleField = ({x, y}) => {
     x = (x - window.innerWidth / 2) / RADIUS;
     y = (y - window.innerHeight / 2) / RADIUS;
     return {
-        x: (x - y - x * (x ** 2 + y ** 2)) * FORCE_MULTI,
-        y: (x + y - y * (x ** 2 + y ** 2)) * FORCE_MULTI,
+        x: (x - y - x * (x ** 2 + y ** 2)) * FORCE_MULTI * RADIUS / 300,
+        y: (x + y - y * (x ** 2 + y ** 2)) * FORCE_MULTI * RADIUS / 300,
     };
 }
 
@@ -25,8 +29,8 @@ const lumpField = ({x, y}) => {
     y = y - window.innerHeight / 2;
 
     return {
-        x: -x * FORCE_MULTI * LUMP_FORCE,
-        y: -y * FORCE_MULTI * LUMP_FORCE,
+        x: -x * LUMP_FORCE,
+        y: -y * LUMP_FORCE,
     };
 }
 
@@ -39,8 +43,8 @@ const disperseField = ({x, y}) => {
     }
 
     return {
-        x: x * FORCE_MULTI * LUMP_FORCE * 2,
-        y: y * FORCE_MULTI * LUMP_FORCE * 2,
+        x: x * LUMP_FORCE * 2,
+        y: y * LUMP_FORCE * 2,
     }
 }
 
@@ -63,6 +67,7 @@ class Balls extends Component {
     }
 
     componentDidMount() {
+        RADIUS = (window.innerHeight - 300) / 2;
         this.create_balls();
     }
 
@@ -90,7 +95,7 @@ class Balls extends Component {
                 height: window.innerHeight,
                 showVelocity: false,
                 wireframes: false,
-                background: "rgb(40, 70, 80)",
+                background: "rgb(239, 111, 108)",
             },
         });
 
@@ -100,7 +105,7 @@ class Balls extends Component {
                 Bodies.circle(
                     getRandomInt(0, window.innerWidth),
                     getRandomInt(0, window.innerHeight),
-                    30,
+                    20,
                     {frictionAir: 0.1}
                 )
             );
@@ -114,14 +119,17 @@ class Balls extends Component {
         render.bounds.min.x = 0;
         render.bounds.min.y = 0;
 
-        window.addEventListener("resize", () => {
+
+        window.onresize = () => {
             render.bounds.max.x = window.innerWidth;
             render.bounds.max.y = window.innerHeight;
             render.options.width = window.innerWidth;
             render.options.height = window.innerHeight;
             render.canvas.width = window.innerWidth;
             render.canvas.height = window.innerHeight;
-        });
+
+            RADIUS = (window.innerHeight - 300) / 2;
+        }
 
         const mouse = Mouse.create(render.canvas),
             mouseConstraint = MouseConstraint.create(engine, {
@@ -140,7 +148,7 @@ class Balls extends Component {
             for (let i = 0; i < Composite.allBodies(engine.world).length; i++) {
                 let body = Composite.allBodies(engine.world)[i];
 
-                body.render.fillStyle = "rgb(100, 100, 100";
+                body.render.fillStyle = BASE_COLOR;
 
                 Body.applyForce(
                     body,
@@ -154,6 +162,18 @@ class Balls extends Component {
                     )
                 );
 
+                let speed = Body.getSpeed(body);
+                speed = speed * 15;
+
+                body.render.fillStyle = "rgb(".concat(
+                    (speed < BASE_RGB.r ? BASE_RGB.r : speed).toString(),
+                    ", ",
+                    (speed < BASE_RGB.g ? BASE_RGB.g : speed).toString(),
+                    ", ",
+                    (speed < BASE_RGB.b ? BASE_RGB.b : speed).toString(),
+                    ")"
+                );
+
                 if (mDiff < MAX_MOUSE_DISTANCE) {
                     Body.applyForce(
                         body,
@@ -164,11 +184,11 @@ class Balls extends Component {
                         }
                     );
                     body.render.fillStyle = "rgb(".concat(
-                        (100 + (MAX_MOUSE_DISTANCE - mDiff)).toString(),
+                        (BASE_RGB.r + (MAX_MOUSE_DISTANCE - mDiff)).toString(),
                         ", ",
-                        (100 + 1.8 * (MAX_MOUSE_DISTANCE - mDiff)).toString(),
+                        (BASE_RGB.g + 1.8 * (MAX_MOUSE_DISTANCE - mDiff)).toString(),
                         ", ",
-                        (100 + 2 * (MAX_MOUSE_DISTANCE - mDiff)).toString(),
+                        (BASE_RGB.b + 2 * (MAX_MOUSE_DISTANCE - mDiff)).toString(),
                         ")"
                     );
                 }

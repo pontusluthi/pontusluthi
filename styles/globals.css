@@ -15,7 +15,7 @@ body {
     Helvetica Neue,
     sans-serif;
 
-    background-color: #00131a;
+    background-color: rgb(7, 30, 34);
 }
 
 div {
@@ -35,3 +35,11 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+/*
+122, 231, 199 aqua
+239, 111, 108 coral
+7, 30, 34     blackish
+56, 134, 151 blueish
+247, 235, 232 whitish
+*/
