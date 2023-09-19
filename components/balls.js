@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import * as Matter from "matter-js";
 
 
@@ -11,7 +11,57 @@ const MAX_MOUSE_DISTANCE = Math.floor(
 const MOUSE_FORCE = 0.00004;
 const LUMP_FORCE = 0.005;
 
+const circleField = ({x, y}) => {
+    x = (x - window.innerWidth / 2) / RADIUS;
+    y = (y - window.innerHeight / 2) / RADIUS;
+    return {
+        x: (x - y - x * (x ** 2 + y ** 2)) * FORCE_MULTI,
+        y: (x + y - y * (x ** 2 + y ** 2)) * FORCE_MULTI,
+    };
+}
+
+const lumpField = ({x, y}) => {
+    x = x - window.innerWidth / 2;
+    y = y - window.innerHeight / 2;
+
+    return {
+        x: -x * FORCE_MULTI * LUMP_FORCE,
+        y: -y * FORCE_MULTI * LUMP_FORCE,
+    };
+}
+
+const disperseField = ({x, y}) => {
+    x = x - window.innerWidth / 2;
+    y = y - window.innerHeight / 2;
+
+    if ((x ** 2 + y ** 2) > (window.innerHeight/2) ** 2 + (window.innerWidth/2) ** 2) {
+        return {x: 0, y: 0}
+    }
+
+    return {
+        x: x * FORCE_MULTI * LUMP_FORCE * 2,
+        y: y * FORCE_MULTI * LUMP_FORCE * 2,
+    }
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
+
+const fieldType = {
+    "circle": circleField,
+    "lump": lumpField,
+    "disperse": disperseField,
+}
+
+let currField = "";
+
 class Balls extends Component {
+    constructor(props) {
+        super(props);
+        currField = this.props.field;
+    }
+
     componentDidMount() {
         this.create_balls();
     }
@@ -95,7 +145,7 @@ class Balls extends Component {
                 Body.applyForce(
                     body,
                     {x: body.position.x, y: body.position.y},
-                    vectorFieldCircle(body.position)
+                    fieldType[currField](body.position)
                 );
                 let mDiff = Math.floor(
                     Math.sqrt(
@@ -134,29 +184,6 @@ class Balls extends Component {
     simDivObj = React.createRef();
 
     render() {}
-}
-
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * max) + min;
-}
-
-function vectorFieldCircle({x, y}) {
-    x = (x - window.innerWidth / 2) / RADIUS;
-    y = (y - window.innerHeight / 2) / RADIUS;
-    return {
-        x: (x - y - x * (x ** 2 + y ** 2)) * FORCE_MULTI,
-        y: (x + y - y * (x ** 2 + y ** 2)) * FORCE_MULTI,
-    };
-}
-
-function vectorFieldLump({x, y}) {
-    x = x - window.innerWidth / 2;
-    y = y - window.innerHeight / 2;
-
-    return {
-        x: -x * FORCE_MULTI * LUMP_FORCE,
-        y: -y * FORCE_MULTI * LUMP_FORCE,
-    };
 }
 
 export default Balls;
