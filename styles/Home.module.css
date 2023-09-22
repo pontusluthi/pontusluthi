@@ -30,3 +30,40 @@
 .controls {
     position: absolute;
 }
+
+.cv {
+    position: absolute;
+    width: 50vw;
+    height: 80vh;
+    top: 10vh;
+    left: 25vw;
+    z-index: 2;
+
+    border-radius: 3vw;
+
+    background-color: rgba(255, 255, 255);
+    animation: slide-in 1.5s;
+}
+
+.hideCv {
+    animation: slide-out 1.5s;
+    top: 100vh;
+}
+
+@keyframes slide-out {
+    0% {
+        top: 10vh;
+    }
+    100% {
+        top: 100vh;
+    }
+}
+
+@keyframes slide-in {
+    0% {
+        top: 100vh;
+    }
+    100% {
+        top: 10vh;
+    }
+}
