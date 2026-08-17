@@ -11,7 +11,8 @@
  * @type {import('next').NextConfig}
  */
 const cityComparator =
-  process.env.CITY_COMPARATOR_ZONE || "https://city-comparator-web.vercel.app";
+  process.env.CITY_COMPARATOR_ZONE ||
+  "https://city-comparator-web-pontusluthis-projects.vercel.app";
 
 const nextConfig = {
   async rewrites() {
