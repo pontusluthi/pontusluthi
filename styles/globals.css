@@ -1,45 +1,123 @@
-html,
-body {
-    padding: 0;
-    margin: 0;
-    font-family: Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    Segoe UI,
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    Droid Sans,
-    Helvetica Neue,
-    sans-serif;
-
-    background-color: rgb(7, 30, 34);
-}
-
-div {
-    background-color: transparent;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
+:root {
+  --bg: #0a0a0a;
+  --fg: #ededed;
+  --muted: #8a8a8a;
+  --line: #262626;
+  --card: #111111;
+  --accent: #38bdf8;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/*
-122, 231, 199 aqua
-239, 111, 108 coral
-7, 30, 34     blackish
-56, 134, 151 blueish
-247, 235, 232 whitish
-*/
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12vh 24px 6vh;
+}
+
+.intro h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+}
+
+.intro p {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin: 0 0 3rem;
+}
+
+.projects {
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  display: block;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 22px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+a.card:hover {
+  border-color: #3f3f3f;
+  transform: translateY(-2px);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-head h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #04212e;
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-weight: 600;
+}
+
+.blurb {
+  color: var(--muted);
+  margin: 0.7rem 0 0;
+  line-height: 1.5;
+}
+
+.tags {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 0.72rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.card--soon {
+  opacity: 0.55;
+}
+
+.foot {
+  margin-top: 4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.foot a:hover {
+  color: var(--fg);
+}

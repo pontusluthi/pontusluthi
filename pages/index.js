@@ -1,39 +1,64 @@
 import Head from "next/head";
-import React, {useEffect, useState} from "react";
-import styles from "../styles/Home.module.css";
-import '../components/balls'
-import Balls from "../components/balls";
-import Cv from "../components/cv"
+
+const projects = [
+  {
+    title: "City Comparator",
+    href: "/city-comparator",
+    blurb:
+      "Comparing European cities by their public-transport networks — interactive maps and graph-theoretic stats.",
+    tags: ["maps", "data", "transit"],
+    live: true,
+  },
+];
 
 export default function Home() {
-    const [field, setField] = useState("circle");
-    const [showCv, setShowCv] = useState(false);
+  return (
+    <>
+      <Head>
+        <title>Pontus Lüthi</title>
+        <meta
+          name="description"
+          content="Pontus Lüthi — projects in maps, data, and software."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
 
-    return (
-        <div className={styles.body}>
-            <Head>
-                <title>Pontus Lüthi</title>
-            </Head>
+      <main className="wrap">
+        <header className="intro">
+          <h1>Pontus Lüthi</h1>
+          <p>Maps, data, and things I build for the fun of it.</p>
+        </header>
 
-            <Balls key={field} field={field}/>
+        <section aria-label="Projects" className="projects">
+          {projects.map((p) => (
+            <a key={p.href} href={p.href} className="card">
+              <div className="card-head">
+                <h2>{p.title}</h2>
+                {p.live && <span className="badge">live</span>}
+              </div>
+              <p className="blurb">{p.blurb}</p>
+              <div className="tags">
+                {p.tags.map((t) => (
+                  <span key={t} className="tag">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </a>
+          ))}
 
-            <button className={styles.name} onClick={() => {
-                setShowCv(showCv => !showCv);
-                setField(field === "circle" ? "disperse" : "circle");
-            }}>
-                <h1>Pontus Lüthi</h1>
-            </button>
-
-            <div className={styles.controls}>
-                <button onClick={() => setField("circle")}> Circle </button>
-                <button onClick={() => setField("disperse")}> Disperse </button>
-                <button onClick={() => setField("lump")}> Lump </button>
+          <div className="card card--soon">
+            <div className="card-head">
+              <h2>More soon</h2>
             </div>
+            <p className="blurb">Other experiments will land here.</p>
+          </div>
+        </section>
 
-
-            <Cv className={showCv ? styles.cv : `${styles.cv} ${styles.hideCv}`} />
-
-        </div>
-    );
+        <footer className="foot">
+          <a href="https://github.com/pontusluthi">github.com/pontusluthi</a>
+        </footer>
+      </main>
+    </>
+  );
 }
-
